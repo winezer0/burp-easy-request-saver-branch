@@ -12,3 +12,8 @@ To install this extension, download the latest release from the Releases tab, th
 ## Development
 
 This project uses Maven for dependency management, and includes IntelliJ project files; you can use either to build new versions. You may need to install my [Burp Extension Maven Archetype](https://github.com/ise-spolansky/burp-extension-maven-archetype) in order to build the project.
+
+## update record
+```
+1.1 选择保存多个报文信息到1个文件
+```

@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.nio.file.StandardOpenOption;
 
 public class BurpExtender implements IBurpExtender, IContextMenuFactory
 {
@@ -21,19 +22,22 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
     private PrintWriter stderr;
     private IExtensionHelpers helpers;
 
+    private String ExtensionName = "Easy Request Saver";
+    private String Version = "1.1";
+
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks)
     {
-        // set our extension name
-        callbacks.setExtensionName("Easy Request Saver");
-
         // obtain our output and error streams
         stdout = new PrintWriter(callbacks.getStdout(), true);
         stderr = new PrintWriter(callbacks.getStderr(), true);
         helpers = callbacks.getHelpers();
 
+        // set our extension name
+        callbacks.setExtensionName(ExtensionName);
+
         callbacks.registerContextMenuFactory(this);
-        stdout.println("Loaded Easy Request Saver extension");
+        stdout.println(String.format("Loaded Easy Request Saver extension: %s %s", ExtensionName, Version));
     }
 
     @Override
@@ -41,7 +45,7 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
         int itemCount = iContextMenuInvocation.getSelectedMessages().length;
         if (itemCount < 1) return null;
         boolean plural = itemCount > 1;
-        JMenuItem exportItem = new JMenu("Export...");
+        JMenuItem exportItem = new JMenu("Export InA ...");
         DataSource[] menuItemSources =
                 {DataSource.REQUEST, DataSource.REQUEST, DataSource.RESPONSE, DataSource.RESPONSE};
         DataType[] menuItemTypes =
@@ -73,17 +77,19 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
             saveItem(chosenPath, requests[0], source, type);
             return;
         }
-
-        Path pathPrefix = chosenPath.getParent();
-        String prefix = Util.getBaseName(chosenPath) + " - ";
-        String extension = Util.getExtension(chosenPath);
+        //Path pathPrefix = chosenPath.getParent();
+        //String prefix = Util.getBaseName(chosenPath) + ".txt";
+        //String prefix = Util.getBaseName(chosenPath);
+        //String extension = Util.getExtension(chosenPath);
         for (int i = 0; i < requests.length; i++) {
-            Path curPath = pathPrefix.resolve(prefix + i + extension);
-            saveItem(curPath, requests[i], source, type);
+            //Path curPath = pathPrefix.resolve(prefix + i + extension);
+            //Path curPath = pathPrefix.resolve(prefix);
+            saveItem(chosenPath, requests[i], source, type);
         }
     }
 
     private void saveItem(Path path, IHttpRequestResponse request, DataSource source, DataType type) {
+
         int offset = (source == DataSource.REQUEST) ?
                 helpers.analyzeRequest(request).getBodyOffset() :
                 helpers.analyzeResponse(request.getResponse()).getBodyOffset();
@@ -93,8 +99,19 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
         byte[] data = type == DataType.HEADER ?
                 Arrays.copyOf(sourceData, offset) :
                 Arrays.copyOfRange(sourceData, offset, sourceData.length);
+
+        byte[] splitBytes = "\n====================================================\n".getBytes();
         try {
-            Files.write(path, data);
+            // 创建一个新字节数组，用于存储分割线和数据
+            byte[] combinedData = new byte[splitBytes.length + data.length];
+            // 将分割线字节复制到新数组中
+            System.arraycopy(splitBytes, 0, combinedData, 0, splitBytes.length);
+            // 将数据字节复制到新数组中，从分割线字节后面的位置开始
+            System.arraycopy(data, 0, combinedData, splitBytes.length, data.length);
+            // 一次性写入文件，仅使用APPEND选项
+            Files.write(path, combinedData, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            //CREATE：如果文件不存在，那么会创建一个新的文件；如果文件已经存在，此选项并不会影响文件内容。
+            //APPEND：表示将数据写入文件时，数据会被追加到文件的末尾，而不是覆盖现有内容。
         } catch (IOException e) {
             e.printStackTrace(stderr);
         }
