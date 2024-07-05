@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Burp Easy Request Saver" />
+        <module name="burp-easy-request-saver-branch" />
       </profile>
     </annotationProcessing>
   </component>
