@@ -77,13 +77,8 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
             saveItem(chosenPath, requests[0], source, type);
             return;
         }
-        //Path pathPrefix = chosenPath.getParent();
-        //String prefix = Util.getBaseName(chosenPath) + ".txt";
-        //String prefix = Util.getBaseName(chosenPath);
-        //String extension = Util.getExtension(chosenPath);
+        //循环保存每个选中的消息
         for (int i = 0; i < requests.length; i++) {
-            //Path curPath = pathPrefix.resolve(prefix + i + extension);
-            //Path curPath = pathPrefix.resolve(prefix);
             saveItem(chosenPath, requests[i], source, type);
         }
     }
