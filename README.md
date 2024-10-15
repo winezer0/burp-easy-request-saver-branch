@@ -17,6 +17,4 @@
 ## 放弃升级
 ```
 更好的版本请移步 https://github.com/winezer0/Copier-Branch
-
-已经实现自定义任意位置的内容导出.
 ```
