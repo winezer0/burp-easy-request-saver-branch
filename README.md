@@ -1,24 +1,22 @@
 # Burp Easy Request Saver
 
-This is an extension for [Burp Suite](https://portswigger.net/burp) that adds a context menu item to every request entry and request editor that allows you to easily export the request/response headers/body data to a file:
-![Screenshot showing the "Export" context menu item added by this extension](img/demo-01.png)
+这是用于Burp Suite的一个扩展，它在每个请求条目和请求编辑器的上下文菜单中添加了一个“导出”选项，使您可以轻松地将请求/响应的头部和正文数据导出到文件中：
 
-Single requests will be exported using the verbatim file name provided. Multiple requests will be saved as individual files in the same folder using the provided file name as a prefix. For instance, if you save multiple requests as `body.txt`, then the first request will be saved to `body - 1.txt`, the second to `body - 2.txt`, and so on.
-
-## Installation
-
-To install this extension, download the latest release from the Releases tab, then go to the Extender tab in Burp, click "Add", and navigate to where you downloaded the release to. 
-
-## Development
-
-This project uses Maven for dependency management, and includes IntelliJ project files; you can use either to build new versions. You may need to install my [Burp Extension Maven Archetype](https://github.com/ise-spolansky/burp-extension-maven-archetype) in order to build the project.
+截图显示了由该扩展添加的“导出”上下文菜单项
 
 ## 更新记录
 ```
-1.1 支持选择保存多个报文信息到1个文件
+1.1 支持选择保存N个报文指定部位的信息保存到1个文件
 ```
 
 ## 存在缺陷
 ```
 1、不支持同时选择多个需要保存的部分
+```
+
+## 放弃升级
+```
+更好的版本请移步 https://github.com/winezer0/Copier-Branch
+
+已经实现自定义任意位置的内容导出.
 ```
